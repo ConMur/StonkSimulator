@@ -7,7 +7,7 @@ local UpdatePlayerStats = ReplicatedStorage:WaitForChild("UpdatePlayerStats")
 
 local mapStateToProps = require(script.Parent.mapStateToProps)
 local mapDispatchToProps = require(script.Parent.mapDispatchToProps)
-local Stats = require(script.Parent.Stats)
+local Stats = require(script.Parent.Parent.Parent.Util.Stats)
 local StockChart = require(script.Parent.StockChart)
 local ValueIndicator = require(script.Parent.ValueIndicator)
 
@@ -17,12 +17,14 @@ local getCurrentStockValue = require(script.Parent.Util.getCurrentStockValue)
 local Constants = require(script.Parent.Util.Constants)
 local AudioPlayer = require(script.Parent.Parent.Parent.Util.AudioPlayer)
 
+local INFO_FRAME_SIZE = 58
+
 local StockChartScreen = Roact.PureComponent:extend("StockChartScreen")
 StockChartScreen.defaultProps = {
 	buttonText = "Click me to start a new game!"
 }
 
-function StockChartScreen:init()	
+function StockChartScreen:init()
 	self.state = {
 		currentStockValue = 0,
 		currentTime = 0,
@@ -87,10 +89,10 @@ function StockChartScreen:render()
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
 		
-		button = Roact.createElement("Frame", {
+		chartFrame = Roact.createElement("Frame", {
 			BackgroundColor3 = Color3.new(100, 0, 100),
 			LayoutOrder = 1,
-			Size = UDim2.new(1, 0, 0.9, 0),
+			Size = UDim2.new(1, 0, 1, -INFO_FRAME_SIZE),
 		}, {
 			chart = self.props.chartData and Roact.createElement(StockChart, {
 				ZIndex = 1,
@@ -115,7 +117,7 @@ function StockChartScreen:render()
 		infoFrame = Roact.createElement("Frame", {
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
 			LayoutOrder = 2,
-			Size = UDim2.new(1, 0, 0.1, 0),
+			Size = UDim2.new(1, 0, 0, INFO_FRAME_SIZE),
 		}, {
 			layout = Roact.createElement("UIListLayout", {
 				FillDirection = Enum.FillDirection.Horizontal,

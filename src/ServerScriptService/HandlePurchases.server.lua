@@ -18,7 +18,7 @@ productFunctions[1076048570] = function(receipt, player)
 	local numStocks = PlayerStatManager:GetStat(player, "Stocks")
 	PlayerStatManager:ChangeStat(player, "Stocks", numStocks + 10)
 	-- Update the player about their stocks
-	SendPlayerStats:FireClient(player, 0, 10)
+	SendPlayerStats:FireClient(player, 0, 10, 0, 0, 0)
 end
  
 -- The core 'ProcessReceipt' callback function

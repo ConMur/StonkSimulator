@@ -14,7 +14,12 @@ local AUTOSAVE_INTERVAL = 60
 -- Function that other scripts can call to change a player's stats
 function PlayerStatManager:ChangeStat(player, statName, value)
 	local playerUserId = "Player_" .. player.UserId
-	assert(typeof(sessionData[playerUserId][statName]) == typeof(value), "ChangeStat error: types do not match")
+	local sessionDataType = typeof(sessionData[playerUserId][statName])
+	local valueType = typeof(value)
+	-- Allow nil values to be overwritten
+	if sessionDataType ~= nil then
+		assert(sessionDataType == valueType, "ChangeStat error: types do not match (" .. tostring(sessionDataType) .. " and " .. tostring(valueType) .. ")")
+	end
 	sessionData[playerUserId][statName] = value
 end
 
@@ -40,11 +45,16 @@ local function setupPlayerData(player)
 			sessionData[playerUserId] = data
 		else
 			-- Data store is working, but no current data for this player
-			sessionData[playerUserId] = {Money=100, Stocks=0}
+			sessionData[playerUserId] = {Money=100, Stocks=0, Lambos=0, Houses=0, Planets=0}
 		end
 		
 		-- Send the data to the client
-		SendPlayerStats:FireClient(player, sessionData[playerUserId].Money, sessionData[playerUserId].Stocks)
+		SendPlayerStats:FireClient(player, 
+			sessionData[playerUserId].Money or 0, 
+			sessionData[playerUserId].Stocks or 0,
+			sessionData[playerUserId].Lambos or 0, 
+			sessionData[playerUserId].Houses or 0, 
+			sessionData[playerUserId].Planets or 0)
 	end
 end
 
